@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import './App.css';
-import { IAnimal } from './models/IAnimal';
-import { fetchAnimals } from './services/fetchAnimalService';
-import { Link, Router, Route, Routes } from 'react-router-dom'; 
+import '../App.css';
+import { IAnimal } from '../models/IAnimal';
+import { fetchAnimals } from '../services/fetchAnimals';
+import { Link } from 'react-router-dom'; 
+import errorImg from '../assets/errorImg.png';
 
 function App() {
   const [animals, setAnimals] = useState<IAnimal[]>([]);
@@ -25,16 +26,16 @@ function App() {
             <h4>{animal.latinName}</h4>
             <img 
             src={animal.imageUrl} 
-            style={{ width: '300px', height: '300px' }} 
-            alt={animal.name} />
+            style={{ width: '500px', height: 'auto' }} 
+            alt={animal.name}
+            onError={(e) => {
+              e.currentTarget.src = errorImg; 
+            }}
+            />
             <p>{animal.shortDescription}</p>
             <Link to={`/animal/${animal.id}`}>Läs mer!</Link>
           </div>
         ))}
-        <Routes>
-          <Route
-            path="/animal/:id"/>
-        </Routes>
       </div>
   );
 }
