@@ -1,7 +1,10 @@
 import { IAnimal } from '../models/IAnimal';
 import { Dispatch, SetStateAction } from 'react';
 
-export const feedAnimal = (animal: IAnimal, setAnimal: Dispatch<SetStateAction<IAnimal | null>>): void => {
+export const feedAnimal = (
+  animal: IAnimal,
+  setAnimal: Dispatch<SetStateAction<IAnimal | null>>
+): void => {
   const updatedAnimal = {
     ...animal,
     isFed: true,

@@ -6,4 +6,5 @@ export interface IAnimal {
     longDescription: string;
     imageUrl: string;
     isFed: boolean;
+    feedingTime: string;
 }
