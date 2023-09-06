@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { IAnimal } from '../models/IAnimal';
-import { fetchAnimals } from '../services/fetchAnimals';
 import errorImg from '../assets/errorImg.png';
 import { feedAnimal } from '../services/feedingAnimals';
 
@@ -12,13 +11,11 @@ function AnimalPage() {
   useEffect(() => {
     const fetchAnimalData = async () => {
       if (id) {
-        const animalsData = await fetchAnimals();
-        const specificAnimal = animalsData.find(
-          animal => animal.id === parseInt(id, 10)
-        );
+        const animalsData = JSON.parse(localStorage.getItem('animalList') || '[]');
+        const specificAnimal = animalsData.find((animal: IAnimal) => animal.id === parseInt(id, 10));
         if (specificAnimal) {
           setAnimal(specificAnimal);
-
+  
           const storedAnimal = localStorage.getItem(`animal_${specificAnimal.id}`);
           if (storedAnimal) {
             setAnimal(JSON.parse(storedAnimal));
@@ -26,7 +23,7 @@ function AnimalPage() {
         }
       }
     };
-
+  
     fetchAnimalData();
   }, [id]);
 
