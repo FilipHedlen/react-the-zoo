@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { IAnimal } from '../models/IAnimal';
 import errorImg from '../assets/errorImg.png';
-import { feedAnimal } from '../services/feedingAnimals';
 
 function AnimalPage() {
   const { id } = useParams<{ id?: string }>();
@@ -12,24 +11,34 @@ function AnimalPage() {
     const fetchAnimalData = async () => {
       if (id) {
         const animalsData = JSON.parse(localStorage.getItem('animalList') || '[]');
-        const specificAnimal = animalsData.find((animal: IAnimal) => animal.id === parseInt(id, 10));
+        const specificAnimal = animalsData.find((a: IAnimal) => a.id === parseInt(id, 10));
         if (specificAnimal) {
           setAnimal(specificAnimal);
-  
-          const storedAnimal = localStorage.getItem(`animal_${specificAnimal.id}`);
-          if (storedAnimal) {
-            setAnimal(JSON.parse(storedAnimal));
-          }
         }
       }
     };
-  
+
     fetchAnimalData();
   }, [id]);
 
   const handleFeedAnimal = () => {
     if (animal) {
-      feedAnimal(animal, setAnimal);
+      const updatedAnimal = {
+        ...animal,
+        isFed: true,
+        feedingTime: new Date().toISOString(),
+      };
+      setAnimal(updatedAnimal);
+
+      const animalsData = JSON.parse(localStorage.getItem('animalList') || '[]');
+
+      const updatedAnimalsData = animalsData.map((a: IAnimal) =>
+        a.id === updatedAnimal.id ? updatedAnimal : a
+      );
+
+      localStorage.setItem('animalList', JSON.stringify(updatedAnimalsData));
+
+      localStorage.setItem(`animal_${animal.id}`, JSON.stringify(updatedAnimal));
     }
   };
 
@@ -61,7 +70,7 @@ function AnimalPage() {
             src={animal.imageUrl}
             alt={animal.name}
             style={{ width: '100%', height: 'auto' }}
-            onError={e => {
+            onError={(e) => {
               e.currentTarget.src = errorImg;
             }}
           />
