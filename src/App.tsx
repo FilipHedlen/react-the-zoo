@@ -20,6 +20,7 @@ function App() {
 
   return (
     <div>
+      <h1>Welcome to The Zoo</h1>
       <AnimalList animals={animals} />
     </div>
   );
